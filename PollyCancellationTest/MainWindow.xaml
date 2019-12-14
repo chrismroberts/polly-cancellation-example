@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PollyCancellationTest"
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="800">
-    <Grid Margin="40">
+    <Grid Margin="30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
@@ -31,6 +31,7 @@
         <TextBlock x:Name="tbStatus" 
                    Text="Idle" 
                    FontSize="16"
+                   Margin="10,0"
                    Grid.Row="1" 
                    Grid.ColumnSpan="3" />
     </Grid>

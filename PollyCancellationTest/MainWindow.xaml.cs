@@ -22,7 +22,7 @@ namespace PollyCancellationTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool _shouldRetry = true;
+        private bool _shouldRetry;
         private CancellationTokenSource _policyCTS;        
 
         public MainWindow()
@@ -37,7 +37,7 @@ namespace PollyCancellationTest
                 .Handle<DivideByZeroException>()
                 .WaitAndRetryForeverAsync(
                     sleepDurationProvider: (retry, ts) => { return TimeSpan.FromSeconds(5); },
-                    onRetry: (ex, retry, ts, ctx) =>
+                    onRetry: (Exception ex, int retry, TimeSpan ts, Context ctx) =>
                     {
                         UpdateStatus($"Retrying (retry count {retry})");
                         if (!_shouldRetry)
@@ -48,13 +48,14 @@ namespace PollyCancellationTest
                     });
 
             _policyCTS = new CancellationTokenSource();
-            var policyContext = new Context("DoSomething");
+            var policyContext = new Context("RetryContext");
 
             policyContext.Add("CancellationTokenSource", _policyCTS);
             var policyResult = await retryPolicy.ExecuteAndCaptureAsync((ctx, ct) => DivideByZero(), policyContext, _policyCTS.Token);
 
             UpdateStatus($"Policy finished with Outcome type: {policyResult.Outcome}");
         }
+
 
         private Task<int> DivideByZero()
         {
