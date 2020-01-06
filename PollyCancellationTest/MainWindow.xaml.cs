@@ -39,7 +39,7 @@ namespace PollyCancellationTest
                     sleepDurationProvider: (retry, ts) => { return TimeSpan.FromSeconds(5); },
                     onRetry: (Exception ex, int retry, TimeSpan ts, Context ctx) =>
                     {
-                        UpdateStatus($"Retrying (retry count {retry})");
+                        UpdateStatus($"Retrying (reason: {ex.Message}) (retry count {retry})");
                         if (!_shouldRetry)
                         {
                             var cts = ctx["CancellationTokenSource"] as CancellationTokenSource;
